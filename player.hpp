@@ -8,7 +8,9 @@ class player : public instance
 	bool _onFloor;
 	bool _onWall;
 	int _jumpFrames;
-	int _hp;
+	int _hp,
+		_directionX;
+	std::string _directionSprite;
 public:
 	player(const sf::Vector2f pos = sf::Vector2f(300, 600), const sf::Vector2f dim = sf::Vector2f(81, 81), std::string img = "");
 	~player();
@@ -16,7 +18,7 @@ public:
 	int get_hp();
 	void set_speedX(const int& x);
 	void set_speedY(const int& y);
-	bool jump();
+	void gestSprite();
 	void playerAction();
 	void moveSprite();
 	void physics(int dir);
@@ -31,6 +33,8 @@ public:
 inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::string img):instance(pos, dim, img)
 {
 	_hp = 1;
+	_directionX = 0;
+	_directionSprite = "Right";
 	_jumpFrames = 0;
 	_onFloor = false;
 	_onWall = false;
@@ -63,12 +67,21 @@ void player::set_speedY(const int& y)
 	_speed->y = y;
 }
 
+inline void player::gestSprite()
+{
+	if (_directionX == 0)
+	{
+
+		return;
+	}
+}
+
 void player::playerAction(){ 
-	int directionX = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+	_directionX = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
-		_speed->x += (directionX * 2);
+		_speed->x += (_directionX * 2);
 		if (_speed->x > 40)
 			_speed->x = 40;
 		else if (_speed->x < -40)
@@ -76,7 +89,7 @@ void player::playerAction(){
 	}
 	else
 	{
-		_speed->x += (directionX * 1);
+		_speed->x += (_directionX * 1);
 		if (_speed->x > 20)
 			_speed->x = 20;
 		else if (_speed->x < -20)
@@ -97,7 +110,7 @@ void player::playerAction(){
 	{
 		_jumpFrames = 20;
 	}
-	physics(directionX);
+	physics(_directionX);
 }
 
 inline void player::moveSprite()

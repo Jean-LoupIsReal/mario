@@ -32,7 +32,7 @@ instance::instance(const sf::Vector2f pos, const sf::Vector2f dim, std::string i
 		exit(1);
 	}
 	_sprite.setTexture(&_texture);
-	_sprite.setTextureRect(sf::IntRect(208, 0, 16, 16));
+	_sprite.setTextureRect(textureRect);
 }
 
 instance::~instance()
