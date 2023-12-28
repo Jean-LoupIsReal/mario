@@ -10,7 +10,7 @@ class player : public instance
 	int _jumpFrames;
 	int _hp;
 public:
-	player(const sf::Vector2f pos = sf::Vector2f(300, 600), const sf::Vector2f dim = sf::Vector2f(81, 81));
+	player(const sf::Vector2f pos = sf::Vector2f(300, 600), const sf::Vector2f dim = sf::Vector2f(81, 81), std::string img = "");
 	~player();
 	void init(const sf::Vector2f& pos, const sf::Vector2f& dim);
 	int get_hp();
@@ -28,7 +28,7 @@ public:
 };
 
 
-inline player::player(const sf::Vector2f pos, const sf::Vector2f dim):instance(pos, dim)
+inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::string img):instance(pos, dim, img)
 {
 	_hp = 1;
 	_jumpFrames = 0;
@@ -36,7 +36,6 @@ inline player::player(const sf::Vector2f pos, const sf::Vector2f dim):instance(p
 	_onWall = false;
 	_speed = new sf::Vector2i(0, 0);
 	_sprite.setPosition(pos);
-	_sprite.setFillColor(sf::Color(255, 0, 0));
 	_sprite.setSize(dim);
 }
 

@@ -4,9 +4,11 @@ class instance {
 protected:
 	sf::Vector2f* _pos;
 	sf::Vector2f* _dim;
+	sf::Vector2i* _dimTexture;
 	std::string _img;
 	sf::RectangleShape _sprite;
-
+	sf::Texture _texture;
+	sf::IntRect _textureRect;
 public:
 	instance(const sf::Vector2f pos = sf::Vector2f(350, 650), const sf::Vector2f dim = sf::Vector2f(80, 80), std::string img = "");
 	~instance();
@@ -22,10 +24,16 @@ instance::instance(const sf::Vector2f pos, const sf::Vector2f dim, std::string i
 	_img = img;
 	_pos = new sf::Vector2f(pos);
 	_dim = new sf::Vector2f(dim);
+	_dimTexture = new sf::Vector2i(12, 15);
 	_sprite.setPosition(pos);
 	_sprite.setSize(dim);
-	//img au moment donné
-	_sprite.setFillColor(sf::Color(255,0,0));
+	if (!_texture.loadFromFile("mario_classique.png"))
+	{
+		std::cout << "erreur load from file ressources/sprite/" << img << " de l'objet instance.hpp";
+		exit(1);
+	}
+	_sprite.setTexture(&_texture);
+	_sprite.setTextureRect(sf::IntRect(208, 0, 16, 16));
 }
 
 instance::~instance()

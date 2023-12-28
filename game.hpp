@@ -22,7 +22,6 @@ public:
 	void drawMap();
 	void play();
 	void gestColl();
-	bool collisionY();
 
 	sf::RectangleShape get_sprite();
 };
@@ -30,7 +29,7 @@ public:
 game::game()
 {
 	window.create(sf::VideoMode(1900, 1000), "Titre de la fenêtre");
-	mario = new player(sf::Vector2f(650, 350), sf::Vector2f(80, 80));
+	mario = new player(sf::Vector2f(650, 350), sf::Vector2f(81, 81), "mario-classique.png");
 	if (!font.loadFromFile("arial.ttf"))
 		std::cout << "erreur";
 	_fps.setFont(font);
@@ -140,6 +139,8 @@ void game::play()
 
 inline void game::gestColl()
 {
+
+	// Gestion collision de mario
 	int posMapX = static_cast<int>(mario->get_pos()->x)/80,
 		posMapY = static_cast<int>(mario->get_pos()->y)/80,
 		xInBlock = 0,

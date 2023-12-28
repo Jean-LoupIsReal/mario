@@ -18,7 +18,11 @@ using namespace sf;
 
 int main() {
 	//jouer jeu
-  
+	sf::Texture texture;
+	if (!texture.loadFromFile("mario_classique.png"))
+	{
+		exit(1);
+	}
 	RenderWindow window(VideoMode::getDesktopMode(), "Mario Paper Kustom");
 	Event event;
 
@@ -29,7 +33,6 @@ int main() {
 			if (event.type == Event::Closed)
 				window.close();
 		}
-
 		window.clear();
 		mainMenu.draw(window);
 		window.display();

@@ -3,10 +3,11 @@
 class block
 {
 private:
-	sf::RectangleShape* _block;
+	sf::RectangleShape* _block;										// L'affichage du block
+	sf::Texture _texture;
 public:
-	bool _isBlock;
-	block(bool b = false);
+	bool _isBlock;													//S'assure que le block est solide
+	block(bool b = false);											//
 	~block();
 	void set_block(bool);
 	void set_sprite(sf::Vector2f pos, sf::RectangleShape sprite);
