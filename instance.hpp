@@ -3,7 +3,7 @@
 class instance {
 protected:
 	sf::Vector2f* _pos;
-	sf::Vector2f* _dim;
+	sf::Vector2f* _im;
 	std::string _img;
 	sf::RectangleShape _sprite;
 
