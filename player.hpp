@@ -4,11 +4,25 @@
 #include "instance.hpp"
 class player : public instance
 {
-	sf::Vector2i *_speed;
+	sf::Vector2i* _speed;
 	bool _onFloor;
 	bool _onWall;
 	int _jumpFrames;
 	int _hp;
+	struct marioTexture {
+		sf::IntRect marioJumpRight, marioJumpLeft, marioMoveRight, marioMoveLeft, marioSlideRight, marioSlideLeft, marioIdleLeft, marioIdleRight, marioDead;
+		marioTexture() {
+			marioJumpRight = sf::IntRect(355, 0, 16, 16);
+			marioJumpLeft = sf::IntRect(25, 0, 16, 16);
+			marioMoveRight = sf::IntRect(237, 0, 16, 16);
+			marioMoveLeft = sf::IntRect(146, 0, 16, 16);
+			marioSlideLeft = sf::IntRect(56, 0, 16, 16);
+			marioSlideRight = sf::IntRect(327, 0, 16, 16);
+			marioIdleLeft = sf::IntRect(173, 0, 16, 16);
+			marioIdleRight = sf::IntRect(207, 0, 16, 16);
+			marioDead = sf::IntRect(405, 188, 16, 16);
+		}
+	};
 public:
 	player(const sf::Vector2f pos = sf::Vector2f(300, 600), const sf::Vector2f dim = sf::Vector2f(81, 81), std::string img = "");
 	~player();
@@ -28,7 +42,7 @@ public:
 };
 
 
-inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::string img):instance(pos, dim, img)
+inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::string img) :instance(pos, dim, img)
 {
 	_hp = 1;
 	_jumpFrames = 0;
@@ -63,9 +77,9 @@ void player::set_speedY(const int& y)
 	_speed->y = y;
 }
 
-void player::playerAction(){ 
+void player::playerAction() {
 	int directionX = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-	
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
 		_speed->x += (directionX * 2);
