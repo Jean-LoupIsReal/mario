@@ -8,18 +8,17 @@ protected:
 	std::string _img;
 	sf::RectangleShape _sprite;
 	sf::Texture _texture;
-	sf::IntRect _textureRect;
 public:
-	instance(const sf::Vector2f pos = sf::Vector2f(350, 650), const sf::Vector2f dim = sf::Vector2f(80, 80), std::string img = "");
+	instance(const sf::Vector2f pos = sf::Vector2f(0, 0), const sf::Vector2f dim = sf::Vector2f(80, 80), std::string img = "", sf::IntRect textureRect = sf::IntRect(208, 0, 16, 16));
 	~instance();
 	bool collision(instance s) const;
 	sf::Vector2f* get_pos();
 	void set_sprite_pos(const sf::Vector2f& pos);
 	void set_pos();
-	void set_sprite(sf::RectangleShape sprite);
+	void set_textureRect(sf::IntRect textureRect);
 };
 
-instance::instance(const sf::Vector2f pos, const sf::Vector2f dim, std::string img)
+instance::instance(const sf::Vector2f pos, const sf::Vector2f dim, std::string img, sf::IntRect textureRect)
 {
 	_img = img;
 	_pos = new sf::Vector2f(pos);
@@ -64,7 +63,7 @@ inline void instance::set_pos()
 {
 }
 
-inline void instance::set_sprite(sf::RectangleShape sprite)
+inline void instance::set_textureRect(sf::IntRect textureRect)
 {
-	_sprite = sprite;
+	_sprite.setTextureRect(textureRect);
 }
