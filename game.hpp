@@ -115,6 +115,7 @@ void game::play()
 		//regarde les input de l'utilisateur
 		mario->playerAction();
 		gestColl();
+		mario->gestSprite();
 		mario->moveSprite();
 		//Imprime les assets a l'écran
 		draw();
@@ -150,36 +151,34 @@ inline void game::gestColl()
 		x = 0,
 		y = 0,
 		coinsBlock = 0;	//gère exception ou il y aurait 3 block en meme temps
-	if (posMapX < 0)
+	if (mario->get_pos()->x < 0)
 	{
 		mario->hitWall(0);
 	}
-	else if (posMapY < 0) {
-		mario->hitFloor(0);
+	else if (mario->get_pos()->y < 0) {
+		//il n'y a pas de collision si tu depasse la map
+		return;
 	}
-	else {
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 2; j++)
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++)
+		{
+			// Comme mario a toujours 1 pixel de plus qu'un block il aura toujours 4 cases à vérifier
+			// Si la position de la map est un block
+			if (map[posMapY + i][posMapX + j]._isBlock)
 			{
-				// Comme mario a toujours 1 pixel de plus qu'un block il aura toujours 4 cases à vérifier
-				// Si la position de la map est un block
-				if (map[posMapY + i][posMapX + j]._isBlock)
-				{
-					xInBlock = abs(mario->get_pos()->x + j * 81 - (posMapX + 1) * 80);
-					yInBlock = abs(mario->get_pos()->y + i * 81 - (posMapY + 1) * 80);
-					//s'assure que les 
-					if (yInBlocks != yInBlock)
-						yInBlocks += yInBlock;
-					if (xInBlocks != xInBlock)
-						xInBlocks += xInBlock;
-					y = i;
-					x = j;
-					//gère exception ou il y aurait 3 block
-					coinsBlock++;
-				}
+				xInBlock = abs(mario->get_pos()->x + j * 81 - (posMapX + 1) * 80);
+				yInBlock = abs(mario->get_pos()->y + i * 81 - (posMapY + 1) * 80);
+				//s'assure que les 
+				if (yInBlocks != yInBlock)
+					yInBlocks += yInBlock;
+				if (xInBlocks != xInBlock)
+					xInBlocks += xInBlock;
+				y = i;
+				x = j;
+				//gère exception ou il y aurait 3 block
+				coinsBlock++;
 			}
 		}
-
 	}
 	// Gère exception ou il y aurait 3 block
 	if (coinsBlock == 3)

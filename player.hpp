@@ -4,30 +4,15 @@
 #include "instance.hpp"
 class player : public instance
 {
-	struct marioTexture {
-		sf::IntRect marioJumpRight, marioJumpLeft, marioMove1Right, marioMove2Right, marioMove3Right, marioMove1Left, marioMove2Left, marioMove3Left, marioSlideRight, marioSlideLeft, marioIdleLeft, marioIdleRight, marioDead;
-		marioTexture() {
-			marioJumpRight = sf::IntRect(355, 0, 16, 16);
-			marioJumpLeft = sf::IntRect(25, 0, 16, 16);
-			marioMove1Right = sf::IntRect(237, 0, 16, 16);
-			marioMove2Right = sf::IntRect(268, 0, 16, 16);
-			marioMove3Right = sf::IntRect(299, 0, 16, 16);
-			marioMove1Left = sf::IntRect(146, 0, 16, 16);
-			marioMove2Left = sf::IntRect(113, 0, 16, 16);
-			marioMove3Left = sf::IntRect(85, 0, 16, 16);
-			marioSlideLeft = sf::IntRect(56, 0, 16, 16);
-			marioSlideRight = sf::IntRect(327, 0, 16, 16);
-			marioIdleLeft = sf::IntRect(173, 0, 16, 16);
-			marioIdleRight = sf::IntRect(207, 0, 16, 16);
-			marioDead = sf::IntRect(405, 188, 16, 16);
-		}
-	};
 	sf::Vector2i* _speed;
 	bool _onFloor;
 	bool _onWall;
-	int _jumpFrames;
-	int _hp;
-	marioTexture* _marioTexture;
+	int _jumpFrames,
+		_hp,
+		_directionX,
+		_directionSprite,
+		*_marioTexture;
+
 public:
 	player(const sf::Vector2f pos = sf::Vector2f(300, 600), const sf::Vector2f dim = sf::Vector2f(81, 81), std::string img = "");
 	~player();
@@ -35,7 +20,7 @@ public:
 	int get_hp();
 	void set_speedX(const int& x);
 	void set_speedY(const int& y);
-	bool jump();
+	void gestSprite();
 	void playerAction();
 	void moveSprite();
 	void physics(int dir);
@@ -49,6 +34,26 @@ public:
 
 inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::string img) :instance(pos, dim, img)
 {
+	_marioTexture = new int[13];
+
+	// Pointe vers la gauche
+	_marioTexture[0] = 30;	//Jump
+	_marioTexture[1] = 61; 
+	_marioTexture[2] = 90;
+	_marioTexture[3] = 113;
+	_marioTexture[4] = 146;
+	_marioTexture[5] = 181;
+	//Pointe vers la droite
+	_marioTexture[6] = 208;
+	_marioTexture[7] = 239;
+	_marioTexture[8] = 271;
+	_marioTexture[9] = 299;
+	_marioTexture[10] = 327;
+	_marioTexture[11] = 360;
+	_marioTexture[12] = 405; //mort
+
+	_directionX = 0;
+	_directionSprite = 1;
 	_hp = 1;
 	_jumpFrames = 0;
 	_onFloor = false;
@@ -61,6 +66,7 @@ inline player::player(const sf::Vector2f pos, const sf::Vector2f dim, std::strin
 inline player::~player()
 {
 	delete _speed;
+	delete _marioTexture;
 }
 
 void player::init(const sf::Vector2f& pos, const sf::Vector2f& dim) {
@@ -82,12 +88,34 @@ void player::set_speedY(const int& y)
 	_speed->y = y;
 }
 
+inline void player::gestSprite()
+{
+	int numSprite = 0;
+	if (_directionSprite == 1) {
+		numSprite = 6;
+	}
+	else
+	{
+		numSprite = 5;
+	}
+	if (!_onFloor)
+	{
+		numSprite += 5 * _directionSprite;
+	}
+	//si l'utilisateur ne bouge pas
+	if(_onFloor && abs(_directionX) == 1)
+	{
+		_directionSprite = _directionX;
+	}
+	set_textureRect(sf::IntRect(_marioTexture[numSprite], 0, 16, 16));
+}
+
 void player::playerAction() {
-	int directionX = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+	_directionX = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
-		_speed->x += (directionX * 2);
+		_speed->x += (_directionX * 2);
 		if (_speed->x > 40)
 			_speed->x = 40;
 		else if (_speed->x < -40)
@@ -95,7 +123,7 @@ void player::playerAction() {
 	}
 	else
 	{
-		_speed->x += (directionX * 1);
+		_speed->x += (_directionX * 1);
 		if (_speed->x > 20)
 			_speed->x = 20;
 		else if (_speed->x < -20)
@@ -116,7 +144,7 @@ void player::playerAction() {
 	{
 		_jumpFrames = 20;
 	}
-	physics(directionX);
+	physics(_directionX);
 }
 
 inline void player::moveSprite()
